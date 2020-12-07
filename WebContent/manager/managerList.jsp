@@ -1,3 +1,4 @@
+<%@page import="java.sql.PreparedStatement"%>
 <%@page import="java.sql.ResultSet"%>
 <%@page import="java.sql.Statement"%>
 <%@page import="java.sql.Connection"%>
@@ -22,7 +23,8 @@ body {
 	padding-bottom: 30px;
 	padding-right: 30px;
 }
-a{
+
+a {
 	color: white;
 }
 
@@ -43,17 +45,17 @@ h1 {
 			//배포할때는 [bbr123.cafe24.com:3306]-> [127.0.0.1]로 바꿔
 			Connection conn = DriverManager.getConnection("jdbc:mysql://bbr123.cafe24.com:3306/bbr123", "bbr123",
 					"alstjr95!");
-			Statement stmt = conn.createStatement();
 			String sql = "select age, name, part from managersuk";
-			ResultSet rs = stmt.executeQuery(sql);
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+
+			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				String age = rs.getString("age");
 				String name = rs.getString("name");
 				String part = rs.getString("part");
-				out.print(age + "&nbsp;&nbsp;&nbsp;" + name + "&nbsp;&nbsp;&nbsp;" + part
-						+ "<br>");
+				out.print(age + "&nbsp;&nbsp;&nbsp;" + name + "&nbsp;&nbsp;&nbsp;" + part + "<br>");
 			}
-			stmt.close();
+			pstmt.close();
 			conn.close();
 		%>
 	</div>

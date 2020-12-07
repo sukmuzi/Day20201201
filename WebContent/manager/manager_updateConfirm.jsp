@@ -1,5 +1,5 @@
+<%@page import="java.sql.PreparedStatement"%>
 <%@page import="java.sql.ResultSet"%>
-<%@page import="java.sql.Statement"%>
 <%@page import="java.sql.DriverManager"%>
 <%@page import="java.sql.Connection"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -43,10 +43,13 @@ ul {
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection conn = DriverManager.getConnection("jdbc:mysql://bbr123.cafe24.com:3306/bbr123", "bbr123",
 				"alstjr95!");
-		Statement stmt = conn.createStatement();
-		String sql = "select age, name, part from managersuk where name = '" + updateName + "'";
+		
+		String sql = "select age, name, part from managersuk where name = ?";
 
-		ResultSet rs = stmt.executeQuery(sql);
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		pstmt.setString(1, updateName);
+
+		ResultSet rs = pstmt.executeQuery();
 
 		int age = 0;
 		String name = null;

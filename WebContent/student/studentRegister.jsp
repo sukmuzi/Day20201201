@@ -1,4 +1,4 @@
-<%@page import="java.sql.Statement"%>
+<%@page import="java.sql.PreparedStatement"%>
 <%@page import="java.sql.Connection"%>
 <%@page import="java.sql.DriverManager"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -11,7 +11,6 @@ body {
 	background-image: url("../images/back.jpg");
 	color: white;
 }
-
 </style>
 <meta charset="UTF-8">
 <title>학생등록</title>
@@ -33,17 +32,20 @@ body {
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection conn = DriverManager.getConnection(
 				"jdbc:mysql://bbr123.cafe24.com:3306/bbr123?characterEncoding=utf8", "bbr123", "alstjr95!");
-		Statement stmt = conn.createStatement();
-		String sql = "insert into studentsuk(age, name, hakbun) values(" + age + ", '" + name + "', '" + hakbun
-				+ "')";
-		int cnt = stmt.executeUpdate(sql);
+		String sql = "insert into studentsuk(age, name, hakbun) values(?, ?, ?)";
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		pstmt.setString(1, age);
+		pstmt.setString(2, name);
+		pstmt.setString(3, hakbun);
+		int cnt = pstmt.executeUpdate();
 	%><br>
-	<%=cnt%>명 학생이 등록되었습니다.<br>
-	<input onClick="location.href='../index.jsp'" id="btnBack" type="button"
-		name="back" value="메인으로">
+	<%=cnt%>명 학생이 등록되었습니다.
+	<br>
+	<input onClick="location.href='../index.jsp'" id="btnBack"
+		type="button" name="back" value="메인으로">
 	<%
 		conn.close();
-		stmt.close();
+		pstmt.close();
 		// 		response.sendRedirect("student.jsp");
 	%>
 </body>

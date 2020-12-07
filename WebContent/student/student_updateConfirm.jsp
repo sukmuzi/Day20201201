@@ -1,3 +1,4 @@
+<%@page import="java.sql.PreparedStatement"%>
 <%@page import="java.sql.ResultSet"%>
 <%@page import="java.sql.Statement"%>
 <%@page import="java.sql.DriverManager"%>
@@ -43,10 +44,12 @@ ul {
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection conn = DriverManager.getConnection("jdbc:mysql://bbr123.cafe24.com:3306/bbr123", "bbr123",
 				"alstjr95!");
-		Statement stmt = conn.createStatement();
-		String sql = "select age, name, hakbun from studentsuk where name = '" + updateName + "'";
+		
+		String sql = "select age, name, hakbun from studentsuk where name = ?";
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		pstmt.setString(1, updateName);
 
-		ResultSet rs = stmt.executeQuery(sql);
+		ResultSet rs = pstmt.executeQuery();
 
 		int age = 0;
 		String name = null;

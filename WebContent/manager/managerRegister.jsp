@@ -1,3 +1,4 @@
+<%@page import="java.sql.PreparedStatement"%>
 <%@page import="java.sql.Statement"%>
 <%@page import="java.sql.Connection"%>
 <%@page import="java.sql.DriverManager"%>
@@ -32,10 +33,14 @@ body {
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection conn = DriverManager.getConnection(
 				"jdbc:mysql://bbr123.cafe24.com:3306/bbr123?characterEncoding=utf8", "bbr123", "alstjr95!");
-		Statement stmt = conn.createStatement();
-		String sql = "insert into managersuk(age, name, part) values(" + age + ", '" + name + "', '" + part
-				+ "')";
-		int cnt = stmt.executeUpdate(sql);
+		
+		String sql = "insert into managersuk(age, name, part) values(?, ?, ?)";
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		pstmt.setString(1, age);
+		pstmt.setString(2, name);
+		pstmt.setString(3, part);
+		
+		int cnt = pstmt.executeUpdate();
 	%><br>
 	<%=cnt%>명 관리자가 등록되었습니다.
 	<br>
@@ -43,7 +48,7 @@ body {
 		name="back" value="메인으로">
 	<%
 		conn.close();
-		stmt.close();
+		pstmt.close();
 		// 		response.sendRedirect("student.jsp");
 	%>
 </body>
